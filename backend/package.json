@@ -1,2 +1,14 @@
+{
+  "name": "ai-project-backend",
+  "version": "1.0.0",
+  "description": "バックエンド用：自分自身との対話型AI",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "server": "node server.js",
+    "dev": "nodemon server.js"
+  }
 
+
+}
 

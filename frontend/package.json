@@ -1,0 +1,10 @@
+{
+  "name": "ai-project-frontend",
+  "version": "1.0.0",
+  "description": "フロントエンド用：自分自身との対話型AI",
+  "main": "server.js",
+  "private": true,
+  "dependencies": {
+    "vite": "^7.1.12"
+  }
+}
