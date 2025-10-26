@@ -1,2 +1,11 @@
+# プロジェクト全体のgitignore
+# 不要になったらその時に削除
+
 # 保存しないファイル
 node_modules/
+
+.env
+
+backend/data/diaries
+
+backend/data/awarenessTexts
