@@ -9,3 +9,5 @@ node_modules/
 backend/data/diaries
 
 backend/data/awarenessTexts
+
+notes.js

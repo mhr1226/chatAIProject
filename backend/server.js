@@ -1,6 +1,4 @@
 // 環境変数の使用準備
-// configメソッドの使用で、.envファイル内の○○=○○の内容を
-// process.envオブジェクトに追加している。
 require("dotenv").config();
 
 // expressの使用準備
