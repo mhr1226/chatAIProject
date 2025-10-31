@@ -2,29 +2,35 @@ import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [message, setMessage] = useState("");
+  // メッセージ履歴の保存
+  const [messages, setMessages] = useState([]);
+  // 入力中のテキスト
+  const [inputText, setInputText] = useState("");
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const fetchData = async () => {
+  //   const fetchData = async () => {
       
-      try{
-        const res = await fetch("http://localhost:3000/user");
-        const data = await res.text();
-        setMessage(data);
-      } catch (err){
-        console.error("エラーが発生しました。");
-      };
-    }
+  //     try{
+  //       // ルートエンドポイント
+  //       const res = await fetch("http://localhost:3000/");
+  //       const data = await res.text();
+  //       setMessages(data);
 
-    fetchData();
 
-  }, []);
+  //     } catch (err){
+  //       console.error("エラーが発生しました。");
+  //     };
+  //   }
+
+  //   fetchData();
+
+  // }, []);
 
   return (
     <>
       <h1>Self-dialogue AI</h1>
-      <p>バックエンドからのメッセージ: {message}</p>
+      <p>root（/）からのメッセージ: {messages}</p>
     </>
   )
 }

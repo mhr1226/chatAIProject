@@ -25,7 +25,7 @@ app.use(express.json());
 
 // トップページにアクセスした時の処理
 app.get("/", (req,res) => {
-  res.send("Hello World!!");
+  res.send("Hello Worldだよー!!");
 });
 
 // 他ページを作成した時の挙動確認
