@@ -81,7 +81,7 @@ function App() {
           onChange={(e) => setInputText(e.target.value)} 
           onKeyDown={handleKeyPress} 
           placeholder="メッセージを入力..." 
-          rows={5}/>
+          rows={3}/>
           <button onClick={handleSendMessage}>送信</button>
       </div>
     </div>
