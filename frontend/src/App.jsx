@@ -42,7 +42,7 @@ function App() {
   };
 
   // 送信ボタンをクリック時の処理
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       // ブラウザのデフォルト（Enterで改行される仕様）を
       // 制御するメソッド（今回は独自の送信仕様にしたい）
@@ -60,7 +60,7 @@ function App() {
       <div className="messages-area">
         {messages.map((message, index) => {
           return (
-            <div className={`message ${message.role}`}>
+            <div key={index} className={`message ${message.role}`}>
             <div className="message-label">
               {/* メッセージの送り主 */}
               {message.role === "user" ? "あなた" : "AI"}
@@ -79,7 +79,7 @@ function App() {
         <textarea
           value={inputText} 
           onChange={(e) => setInputText(e.target.value)} 
-          onKeyDown={handleKeyPress} 
+          onKeyDown={handleKeyDown} 
           placeholder="メッセージを入力..." 
           rows={3}/>
           <button onClick={handleSendMessage}>送信</button>
