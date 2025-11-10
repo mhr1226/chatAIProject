@@ -26,12 +26,44 @@ app.use(express.json());
 // トップページにアクセスした時の処理
 app.get("/", (req,res) => {
   res.send("Hello Worldだよー!!");
+  console.log(req.body);
 });
 
-// 他ページを作成した時の挙動確認
-app.get("/user", (req,res) => {
-  res.send("Hello World2!!");
-  console.log("userを開きました！");
+// APIのエンドポイント
+app.get("/api/chat", (req,res) => {
+  // App.jsxでhandleSendMessageが発火後に実行される。
+
+  try {
+    // フロントエンドからのメッセージをバックエンドに送る
+    const { message } = req.body;
+
+    // メッセージが空の場合は処理を中断する
+    // 予期しているエラーの為、returnで処理を終了させる
+    if (!message || message.trim()) {
+      // 400番台はクライアント側のエラーを意味する
+      // 今後の実装でページ遷移しないように書き換える（予定）
+      return res.status(400).json({ error: "メッセージが空です。" });
+    }
+
+    // 確認用ログ：後で消す
+    console.log(`フロントエンドからメッセージを送信：${message}`);
+    console.log(`bodyの中身：${req.body}`);
+
+    // AIからの（仮）応答メッセージを作成
+    const aiResponse = `これはAIからの応答メッセージです。：${message}を受け取りました。`;
+
+    res.json({
+      success: true,
+      // replyの命名はApp.jsx側で受け取る際に使用する
+      reply: aiResponse
+    });
+
+  } catch ( error ) {
+    console.error("エラーが発生しました：", error);
+    // 500番台はサーバー側のエラーを意味する
+    res.status(500).json({ error: "サーバーエラーが発生しました。" });
+  }
+
 });
 
 // サーバーの起動
