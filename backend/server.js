@@ -52,14 +52,17 @@ app.get("/api/chat", (req,res) => {
     // AIからの（仮）応答メッセージを作成
     const aiResponse = `これはAIからの応答メッセージです。：${message}を受け取りました。`;
 
+    // 確認用ログ：後で消す
+    console.log(`AIからの応答メッセージ：${aiResponse}`);
+
     res.json({
       success: true,
       // replyの命名はApp.jsx側で受け取る際に使用する
       reply: aiResponse
     });
 
-  } catch ( error ) {
-    console.error("エラーが発生しました：", error);
+  } catch ( err ) {
+    console.error("エラーが発生しました：", err);
     // 500番台はサーバー側のエラーを意味する
     res.status(500).json({ error: "サーバーエラーが発生しました。" });
   }
