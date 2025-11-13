@@ -26,11 +26,10 @@ app.use(express.json());
 // トップページにアクセスした時の処理
 app.get("/", (req,res) => {
   res.send("Hello Worldだよー!!");
-  console.log(req.body);
 });
 
 // APIのエンドポイント
-app.get("/api/chat", (req,res) => {
+app.post("/api/chat", (req,res) => {
   // App.jsxでhandleSendMessageが発火後に実行される。
 
   try {
@@ -39,7 +38,7 @@ app.get("/api/chat", (req,res) => {
 
     // メッセージが空の場合は処理を中断する
     // 予期しているエラーの為、returnで処理を終了させる
-    if (!message || message.trim()) {
+    if (!message || !message.trim()) {
       // 400番台はクライアント側のエラーを意味する
       // 今後の実装でページ遷移しないように書き換える（予定）
       return res.status(400).json({ error: "メッセージが空です。" });
@@ -47,6 +46,7 @@ app.get("/api/chat", (req,res) => {
 
     // 確認用ログ：後で消す
     console.log(`フロントエンドからメッセージを送信：${message}`);
+    // [Object Object]と表示される為、後日修正
     console.log(`bodyの中身：${req.body}`);
 
     // AIからの（仮）応答メッセージを作成
