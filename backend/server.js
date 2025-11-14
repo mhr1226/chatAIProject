@@ -46,8 +46,6 @@ app.post("/api/chat", (req,res) => {
 
     // 確認用ログ：後で消す
     console.log(`フロントエンドからメッセージを送信：${message}`);
-    // [Object Object]と表示される為、後日修正
-    console.log(`bodyの中身：${req.body}`);
 
     // AIからの（仮）応答メッセージを作成
     const aiResponse = `これはAIからの応答メッセージです。：${message}を受け取りました。`;
