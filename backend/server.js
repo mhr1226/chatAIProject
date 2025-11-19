@@ -1,6 +1,9 @@
 // 環境変数の使用準備
 require("dotenv").config();
 
+// diaryLoaderモジュールの読み込み
+const { loadAllDiaries } = require("./diaryLoader");
+
 // expressの使用準備
 const express = require("express");
 
@@ -47,8 +50,19 @@ app.post("/api/chat", (req,res) => {
     // 確認用ログ：後で消す
     console.log(`フロントエンドからメッセージを送信：${message}`);
 
+    // dairyLoaderを使って日記データ(配列)を取得
+    const diaries = loadAllDiaries();
+
+    // 確認用ログ：後で消す
+    console.log("取得した日記データ：", diaries);
+    // 確認用ログ：後で消す
+    console.log("日記データの件数：", diaries.length);
+
+    // ※ここにAIとのやり取りのロジックを実装する予定
+
     // AIからの（仮）応答メッセージを作成
-    const aiResponse = `これはAIからの応答メッセージです。：${message}を受け取りました。`;
+    const aiResponse = `これはAIからの応答メッセージです。：${message}を受け取りました。
+      参照できる日記データの件数は${diaries.length}件です。`;
 
     // 確認用ログ：後で消す
     console.log(`AIからの応答メッセージ：${aiResponse}`);
