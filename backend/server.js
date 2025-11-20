@@ -1,6 +1,9 @@
 // 環境変数の使用準備
 require("dotenv").config();
 
+// Anthropic SDKの使用準備
+const Anthropic = require("@anthropic-ai/sdk");
+
 // diaryLoaderモジュールの読み込み
 const { loadAllDiaries } = require("./diaryLoader");
 
@@ -13,6 +16,12 @@ const cors = require("cors");
 
 // サーバーの準備
 const app = express();
+
+// Anthropicクライアントの初期化
+const anthropic = new Anthropic(
+  // 環境変数からAPIキーを取得
+  process.env.ANTHROPIC_API_KEY
+);
 
 // ポート番号の定義
 const PORT = process.env.PORT ||3000;
@@ -31,8 +40,19 @@ app.get("/", (req,res) => {
   res.send("Hello Worldだよー!!");
 });
 
+// サーバー起動時に日記の初期化（読み込み）
+let cashedDiaries = [];
+try {
+  cashedDiaries = loadAllDiaries();
+  console.log("サーバー起動時に日記データを初期化しました。");
+  console.log("読み込んだ日記データの件数：", cashedDiaries.length);
+
+} catch (err) {
+  console.error("日記データの初期化に失敗しました：", err);
+}
+
 // APIのエンドポイント
-app.post("/api/chat", (req,res) => {
+app.post("/api/chat", async (req,res) => {
   // App.jsxでhandleSendMessageが発火後に実行される。
 
   try {
@@ -51,7 +71,7 @@ app.post("/api/chat", (req,res) => {
     console.log(`フロントエンドからメッセージを送信：${message}`);
 
     // dairyLoaderを使って日記データ(配列)を取得
-    const diaries = loadAllDiaries();
+    const diaries = cashedDiaries;
 
     // 確認用ログ：後で消す
     console.log("取得した日記データ：", diaries);
@@ -61,6 +81,7 @@ app.post("/api/chat", (req,res) => {
     // ※ここにAIとのやり取りのロジックを実装する予定
 
     // AIからの（仮）応答メッセージを作成
+    // await関数を使う（予定）
     const aiResponse = `これはAIからの応答メッセージです。：${message}を受け取りました。
       参照できる日記データの件数は${diaries.length}件です。`;
 
