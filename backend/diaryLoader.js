@@ -34,8 +34,8 @@ const loadAllDiaries = () => {
 
     // 日記データのオブジェクトを作成して返す
     return {
-      fileName: file,
-      metaData: data.date,
+      file: file,
+      date: data.date,
       tags: data.tags,
       content: content.trim()
     };
