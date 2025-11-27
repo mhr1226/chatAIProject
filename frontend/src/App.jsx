@@ -13,7 +13,7 @@ function App() {
 
   // メッセージ送信処理
   // 送信ボタンをクリックしたら発火
-  const handleSendMessage = async () => {
+  const handleSendMessages = async () => {
     if(!inputText.trim()) {
       // 空文字の場合は送信しない
       // ※（見た目の実装時）
@@ -32,9 +32,9 @@ function App() {
     // messagesの初期値は空配列[]
     setMessages(prev => [...prev, userMessage]);
 
-    // 3.送信メッセージの保存
-    // （バックエンドに送る時に使う為）
-    const sendInputMessage = inputText
+    // 3.会話履歴に今回の送信メッセージの追加
+    // （バックエンドで過去の履歴も参照できるようにする為）
+    const sendInputMessages = [...messages, userMessage];
 
     // 4.入力欄をクリア
     setInputText("");
@@ -53,7 +53,7 @@ function App() {
         },
         // 送信するメッセージ
         body: JSON.stringify({
-          message: sendInputMessage
+          messages: sendInputMessages
         }),
       });
 
@@ -106,7 +106,7 @@ function App() {
       // ブラウザのデフォルト（Enterで改行される仕様）を
       // 制御するメソッド（今回は独自の送信仕様にしたい）
       event.preventDefault();
-      handleSendMessage();
+      handleSendMessages();
     }
   };
 
@@ -151,7 +151,7 @@ function App() {
           rows={3}
           disabled={loading}/>
           <button 
-            onClick={handleSendMessage} 
+            onClick={handleSendMessages} 
             disabled={!inputText.trim() || loading}
           >
             {loading ? "送信中..." : "送信"}
