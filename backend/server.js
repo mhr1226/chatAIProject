@@ -47,12 +47,12 @@ app.get("/", (req,res) => {
 
 // AIにリクエストを送る前に記述した方が
 // 読み込み処理が早くなる為先に実行する
-let cashedDiaries = [];
+let cachedDiaries = [];
 try {
   // dairyLoader.jsを使って日記データ(配列)を取得
-  cashedDiaries = loadAllDiaries();
+  cachedDiaries = loadAllDiaries();
   console.log("サーバー起動時に日記データを初期化しました。");
-  console.log("読み込んだ日記データの件数：", cashedDiaries.length);
+  console.log("読み込んだ日記データの件数：", cachedDiaries.length);
 
 } catch (err) {
   console.error("日記データの初期化に失敗しました：", err);
@@ -60,29 +60,28 @@ try {
 
 // APIのエンドポイント
 app.post("/api/chat", async (req,res) => {
-  // App.jsxでhandleSendMessageが発火後に実行される。
+  // App.jsxでhandleSendMessagesが発火後に実行される。
 
   try {
     // フロントエンドからのメッセージをオブジェクトから取り出す
     // 後でAIに送信する為に使う
-    const { message } = req.body;
+    const { messages } = req.body;
 
-    // メッセージが空の場合は処理を中断する
+    // フロントエンドから送られてきた
+    // メッセージ配列が空の場合の処理
     // 予期しているエラーの為、returnで処理を終了させる
-    if (!message || !message.trim()) {
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
       // 400番台はクライアント側のエラーを意味する
       // 今後の実装でページ遷移しないように書き換える（予定）
       return res.status(400).json({ error: "メッセージが空です。" });
     }
 
     // 確認用ログ：後で消す
-    console.log(`フロントエンドからメッセージを送信：${message}`);
+    console.log(`フロントエンドからメッセージを送信：${messages[messages.length -1].content}`);
 
     // キャッシュされた日記データを取得
-    const diaries = cashedDiaries;
+    const diaries = cachedDiaries;
 
-    // 確認用ログ：後で消す
-    console.log("取得した日記データ：", diaries);
     // 確認用ログ：後で消す
     console.log("日記データの件数：", diaries.length);
 
@@ -97,19 +96,15 @@ app.post("/api/chat", async (req,res) => {
       `;
     });
 
-    // 確認用ログ：後で消す
-    console.log("文字列を変換しました：", convertToStrings);
-
     // AIへのプロンプトを作成
     const systemPrompt = `
     あなたは、ユーザーの過去の日記を参考にして対話するAIアシスタントです。
     以下はユーザーの過去の日記です:
-    ${convertToStrings}
+    ${convertToStrings.join("")}
     これらの日記を参考にして、ユーザーの考え方や経験を理解した上で共感的に対話を行ってください。
     `;
 
     // 送信を始める前の確認用ログ：後で消す
-    console.log("AIへのプロンプトを作成しました：", systemPrompt);
     console.log("APIにリクエストを送信中...");
 
     // systemPromptとユーザーメッセージをAnthropic APIに送信
@@ -117,12 +112,7 @@ app.post("/api/chat", async (req,res) => {
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 1024,
       system: systemPrompt,
-      messages: [
-        {
-          role: "user",
-          content: message,
-        },
-      ],
+      messages: messages
     });
 
     // 確認用ログ：後で消す
