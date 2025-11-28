@@ -4,8 +4,8 @@ require("dotenv").config();
 // Anthropic SDKの使用準備
 const Anthropic = require("@anthropic-ai/sdk");
 
-// diaryLoaderモジュールの読み込み
-const { loadAllDiaries } = require("./diaryLoader");
+// axiosの使用準備
+const axios = require("axios");
 
 // expressの使用準備
 const express = require("express");
@@ -26,6 +26,16 @@ const anthropic = new Anthropic({
 // ポート番号の定義
 const PORT = process.env.PORT ||3000;
 
+// microCMSのAPIキーとサービスドメインの取得
+const API_KEY = process.env.MICRO_CMS_API_KEY;
+const SERVICE_DOMAIN = process.env.MICRO_CMS_SERVICE_DOMAIN;
+
+// microCMSのエンドポイント
+const ENDPOINT = process.env.MICRO_CMS_ENDPOINT || "works";
+
+// microCMSのベースURL
+const BASE_URL = `https://${SERVICE_DOMAIN}.microcms.io/api/v1`;
+
 // フロントエンドとバックエンドの通信を許可する
 app.use(cors({
   origin: "http://localhost:5173",
@@ -40,19 +50,26 @@ app.get("/", (req,res) => {
   res.send("Hello Worldだよー!!");
 });
 
-// サーバー起動時に日記の初期化（読み込み）
+// microCMSの記事データの初期化（読み込み）
+// 後日実装
+
+// ===========メモ============
 
 // グローバル変数として保持する
 // この後にAPIリクエストが来た時に使用する為
 
 // AIにリクエストを送る前に記述した方が
 // 読み込み処理が早くなる為先に実行する
+
+// =========================
+
+// microCMSの実装後に必要に応じて修正する
 let cachedDiaries = [];
+
 try {
-  // dairyLoader.jsを使って日記データ(配列)を取得
-  cachedDiaries = loadAllDiaries();
-  console.log("サーバー起動時に日記データを初期化しました。");
-  console.log("読み込んだ日記データの件数：", cachedDiaries.length);
+  // microCMSの記事データ(配列)を取得
+  // 後日実装
+  
 
 } catch (err) {
   console.error("日記データの初期化に失敗しました：", err);
@@ -85,22 +102,25 @@ app.post("/api/chat", async (req,res) => {
     // 確認用ログ：後で消す
     console.log("日記データの件数：", diaries.length);
 
+    // ==========メモ============
+    // microCMS用に後日実装
     // 日記オブジェクトを文字列に変換する
     // 日記データをAIに送信する為に使う
-    const convertToStrings = diaries.map((diary) => {
-      return `
-    【日付】：${diary.date},
-    【タグ】：${diary.tags},
-    【内容】${diary.content}
+
+    // =========================
+    const convertToStrings = `
+    【日付】：仮,
+    【タグ】：仮,
+    【内容】：仮
     \n----------------\n
       `;
-    });
 
     // AIへのプロンプトを作成
+    // microCMSから記事データを取得出来るようにしてから調整
     const systemPrompt = `
     あなたは、ユーザーの過去の日記を参考にして対話するAIアシスタントです。
     以下はユーザーの過去の日記です:
-    ${convertToStrings.join("")}
+    （仮データ：後日実装）
     これらの日記を参考にして、ユーザーの考え方や経験を理解した上で共感的に対話を行ってください。
     `;
 
@@ -109,7 +129,8 @@ app.post("/api/chat", async (req,res) => {
 
     // systemPromptとユーザーメッセージをAnthropic APIに送信
     const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-5-20250929",
+      model: "claude-haiku-4-5-20251001",
+      // 最大出力文字数（1token = 約2~2.6文字）
       max_tokens: 1024,
       system: systemPrompt,
       messages: messages
