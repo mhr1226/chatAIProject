@@ -4,9 +4,6 @@ require("dotenv").config();
 // Anthropic SDKの使用準備
 const Anthropic = require("@anthropic-ai/sdk");
 
-// axiosの使用準備
-const axios = require("axios");
-
 // expressの使用準備
 const express = require("express");
 
@@ -26,16 +23,6 @@ const anthropic = new Anthropic({
 // ポート番号の定義
 const PORT = process.env.PORT ||3000;
 
-// microCMSのAPIキーとサービスドメインの取得
-const API_KEY = process.env.MICRO_CMS_API_KEY;
-const SERVICE_DOMAIN = process.env.MICRO_CMS_SERVICE_DOMAIN;
-
-// microCMSのエンドポイント
-const ENDPOINT = process.env.MICRO_CMS_ENDPOINT || "works";
-
-// microCMSのベースURL
-const BASE_URL = `https://${SERVICE_DOMAIN}.microcms.io/api/v1`;
-
 // フロントエンドとバックエンドの通信を許可する
 app.use(cors({
   origin: "http://localhost:5173",
@@ -49,6 +36,7 @@ app.use(express.json());
 app.get("/", (req,res) => {
   res.send("Hello Worldだよー!!");
 });
+
 
 // microCMSの記事データの初期化（読み込み）
 // 後日実装
@@ -64,7 +52,7 @@ app.get("/", (req,res) => {
 // =========================
 
 // microCMSの実装後に必要に応じて修正する
-let cachedDiaries = [];
+// let cachedDiaries = [];
 
 try {
   // microCMSの記事データ(配列)を取得
