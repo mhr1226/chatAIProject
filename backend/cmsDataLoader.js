@@ -40,11 +40,6 @@ const fetchAllArticles = async () => {
     // 取得する記事データを変数に代入
       const articles = response.data.contents;
 
-      // 記事データを出力する（後で消す）
-      console.log("取得した記事データ：", articles.map((article) => {
-        return article.title;
-      }));
-
       return articles;
 
   } catch (err) {
@@ -60,4 +55,33 @@ const fetchAllArticles = async () => {
   }
 }
 
-fetchAllArticles();
+// =========================================
+// 記事データをAIでの使用時に備えて文字列化する関数
+// ========================================
+  const stringifyArticleData = (articleData) => {
+    
+    // 記事データが存在しない場合
+    if (!articleData || articleData.length === 0) {
+      return "記事データが存在しません。";
+    }
+
+    // 各記事を文字列化して結合
+    return articleData.map(article => {
+      return `
+      タイトル: ${article.title || "タイトルなし"}
+      公開日: ${article.publishedAt || "日付なし"}
+      内容: 
+      ${article.content || "内容なし"}
+      `.trim();
+    }).join("\n\n--------------------\n\n");
+  } 
+
+  // ========================================
+    // 関数のエクスポート
+    // ========================================
+
+    // エクスポートの仕方について後日学習します
+    module.exports = {
+      fetchAllArticles,
+      stringifyArticleData
+    };
