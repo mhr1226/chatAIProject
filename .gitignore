@@ -7,3 +7,6 @@ node_modules/
 .env
 
 notes.md
+
+backend/data
+backend/data/app_database.db
