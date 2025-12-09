@@ -48,9 +48,6 @@ const initializeArticles = async () => {
   try {
     // 記事データを初期化用変数に代入
     cachedArticleData = await fetchAllArticles();
-    // 確認用ログ：後で消す
-    console.log("記事データをキャッシュしました。件数：", cachedArticleData.length);
-    console.log("記事タイトル一覧：", cachedArticleData.map(article => article.title));
 
   } catch (err) {
     console.error("記事データの初期化に失敗しました：", err);
@@ -101,12 +98,7 @@ app.post("/api/chat", async (req,res) => {
     // ※関数内の操作であってもどちらが参照されているか
     // 分かりにくくなる為
     // =========================
-
-    // 確認用ログ：後で消す
-    console.log("日記データの件数：", articles.length);
-
     
-
     // =========================
     // 日記オブジェクトを文字列に変換する
     // （動作確認用：後で変更する）
@@ -114,9 +106,6 @@ app.post("/api/chat", async (req,res) => {
     // ※日記データをAIのプロンプトに含める為
     // =========================
     const stringifiedArticles = stringifyArticleData(articles);
-
-    // 確認用ログ：後で消す
-    console.log("文字列化した日記データ：", stringifiedArticles);
 
     // AIへのプロンプトを作成
     // microCMSから記事データを取得出来るようにしてから調整
@@ -137,7 +126,7 @@ app.post("/api/chat", async (req,res) => {
     });
 
     // 確認用ログ：後で消す
-    console.log("AIからのレスポンスを受信しました：", response);
+    console.log("AIとのやり取りで使用したトークンなど：", response.usage);
 
     // AIの応答メッセージを取り出す
     const aiResponse = response.content[0].text;
