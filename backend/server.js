@@ -7,11 +7,10 @@ const Anthropic = require("@anthropic-ai/sdk");
 // expressの使用準備
 const express = require("express");
 
-// 別サーバーのクライアントサイドからのリクエストに
-// 答えられるようにする為CORSを使用
+// CORSの使用準備
 const cors = require("cors");
 
-// cmsDataLoader.jsから記事データ取得関数をインポート
+// 記事：（全文）データ取得関数のインポート
 const { fetchAllArticles, stringifyArticleData } = require("./cmsDataLoader");
 
 // サーバーの準備
@@ -35,14 +34,10 @@ app.use(cors({
 // JSONデータを受け取れるように設定する
 app.use(express.json());
 
-// =========================================
-// グローバル変数として記事データを保持する
-// =========================================
-
 // 記事データをキャッシュする為の変数
 let cachedArticleData = [];
 
-// 記事データを読み込む関数の定義
+// 記事データの読み込み＆キャッシュ化する関数の定義
 const initializeArticles = async () => {
 
   try {
@@ -54,12 +49,7 @@ const initializeArticles = async () => {
   }
 }
 
-// ===========メモ============
-// グローバル変数として保持する
-// APIリクエストが来る前に情報を取得しておきたい為
-// =========================
-
-// 関数を実行して記事データを初期化
+// 関数を実行して記事データをキャッシュ
 initializeArticles();
 
 // トップページにアクセスした時の処理
@@ -76,8 +66,7 @@ app.post("/api/chat", async (req,res) => {
     // 後でAIに送信する為に使う
     const { messages } = req.body;
 
-    // フロントエンドから送られてきた
-    // メッセージ配列が空の場合の処理
+    // フロントエンドから送られてきたメッセージ配列が空の場合の処理
     // 予期しているエラーの為、returnで処理を終了させる
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       // 400番台はクライアント側のエラーを意味する
@@ -85,24 +74,12 @@ app.post("/api/chat", async (req,res) => {
       return res.status(400).json({ error: "メッセージが空です。" });
     }
 
-    // 確認用ログ：後で消す
-    console.log(`フロントエンドからメッセージを送信：${messages[messages.length -1].content}`);
-
     // キャッシュされた記事データを取得
     const articles = cachedArticleData;
-
-    // ==========メモ============
-    // グローバル変数を関数内の変数に再代入するのは
-    // グローバル変数を直接操作しない為の対策
-
-    // ※関数内の操作であってもどちらが参照されているか
-    // 分かりにくくなる為
-    // =========================
     
     // =========================
     // 日記オブジェクトを文字列に変換する
     // （動作確認用：後で変更する）
-
     // ※日記データをAIのプロンプトに含める為
     // =========================
     const stringifiedArticles = stringifyArticleData(articles);
