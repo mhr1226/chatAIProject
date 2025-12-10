@@ -18,43 +18,12 @@ const dbDir = path.join(__dirname, 'data');
 const dbFile = path.join(dbDir, 'app_database.db');
 
 // データベース接続の初期化
-// ※SQLでいう所のCREATE DATABASEに相当
 const db = new database(dbFile);
 
 // =========================================
 // テーブルの作成（存在しない場合のみ）
-// ========================================
-
-// ========メモ========
-// exec(execute=実行という意)メソッドの戻り値はundefined
-// ====================
-
-// ================SQL文メモ===============
-
-    // 1行目: CREATE TABLE IF NOT EXISTS ai_summaries (
-      // CREATE TABLE: 新しいテーブルを作成するSQLコマンド
-      // IF NOT EXISTS: テーブルが存在しない場合にのみ作成する条件
-      // ai_summaries: 作成するテーブルの名前(任意)
-
-    // 2行目: id INT PRIMARY KEY AUTOINCREMENT,
-      // PRIMARY KEY: 主キー、一意の値を持つ列に設定する
-        // 重複・NULL不可
-      // AUTOINCREMENT: 自動的に連番を振る
-
-    // 3行目: article_id TEXT,
-      // TEXT: 文字列データ型
-      // article_id: 記事の一意識別子を格納する列
-      // UNIQUE: 一意制約、重複する値を許可しない
-      // NOT NULL: NULL値を許可しない
-
-    // 6行目: created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      // DATETIME: 日付と時刻を格納するデータ型
-      // DEFAULT CURRENT_TIMESTAMP: 未入力の場合、現在の日時を自動的に設定する
-
-    // ================================
 
 // AI要約テーブルの作成用の関数
-
 const createAISummariesTable = () => {
 
     try {
@@ -88,6 +57,10 @@ const createAIDialoguesTable = () => {
   }
 }
 
+// =========================================
+
+
+// テーブル作成関数の実行
 createAISummariesTable();
 
 
