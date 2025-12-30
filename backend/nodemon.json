@@ -2,6 +2,7 @@
   "watch": [
     "server.js",
     "diaryLoader.js",
+    "database.js",
     "data"
   ],
   "ext": "js,json,md",

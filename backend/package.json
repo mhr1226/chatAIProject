@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "server": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "database" : "nodemon database.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.70.0",

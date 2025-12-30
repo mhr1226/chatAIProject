@@ -46,7 +46,7 @@
     ```sql
     CREATE TABLE IF NOT EXISTS ai_summaries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    article_id TEXT NOT NULL,
+    article_id TEXT UNIQUE NOT NULL,
     summary TEXT NOT NULL,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
@@ -63,8 +63,9 @@
       - 重複・NULL不可
     - **AUTOINCREMENT**: レコード追加時に自動的に連番を振る
 
-  - 3行目: `article_id TEXT NOT NULL,`
+  - 3行目: `article_id TEXT UNIQUE NOT NULL,`
     - **article_id**: 記事の一意識別子を格納する列
+    - **UNIQUE**: 同じ値がテーブル内に出ないようにする為の指示文。（※チャットなど複数回使用される場合のある値には使わない）
     - **TEXT**: 文字列データ型
     - **NOT NULL**: NULL値を許可しない
 
@@ -75,7 +76,14 @@
   
   - 5行目: `created_at TEXT DEFAULT CURRENT_TIMESTAMP`
     - **created_at**: レコードの作成日時を格納する列
-    - **TEXT**: 文字列データ型（SQLiteではDATETIMEもTEXTとして扱  われ   る）
+    - **TEXT**: 文字列データ型（SQLiteではDATETIMEもTEXTとして扱われる）
     - **DEFAULT CURRENT_TIMESTAMP**: レコード挿入時に未入力の場合、現在の日時を自動的に設定する
 
-    
+    ### 各構文の意味について
+    - `FOREIGN KEY (session_id) REFERENCES ai_chat_sessions(id) ON DELETE CASCADE`
+      - **FOREGN KEY (カラム名)**:他のテーブルの指定の値と関連付けますよー、という意味
+      REFERENCESとセットで使用する。紐づけ先にidが存在しない場合はエラーとなる。
+
+      - **REFERENCES テーブル名(カラム名)**: 指定したテーブル内のカラムを参照しますよー、という意味 
+
+      - **ON DELETE CASCADE**: 紐づけ先のデータが削除されたらこのデータも削除してください、という意味。
